@@ -1,0 +1,41 @@
+---
+dataset:
+  dataset_name: 'shakespeare_char'
+model: # baby GPT model :)
+  n_layer: 6
+  n_head: 6
+  n_embd: 96
+  dropout: 0.2
+  gradient_accumulation_steps: 1
+  bias: False
+  batch_size: 64
+  block_size: 256 # context of up to 256 previous characters
+optimizer:
+  learning_rate: .002 # with baby networks can afford to go a bit higher
+  decay_lr: True
+  lr_decay_iters: 5000 # make equal to max_iters usually
+  min_lr: .0001 # learning_rate / 10 usually
+  beta1: 0.9
+  beta2: 0.99 # make a bit bigger because number of tokens per iter is small
+  warmup_iters: 100 # not super necessary potentially
+  weight_decay: 0.1
+  grad_clip: 1.0
+training:
+  max_iters: 3000 # 3000
+  init_from: 'scratch'
+  eval_only: False
+logging:
+  wandb_log: True
+  wandb_project: 'ShakespeareTransformerAblation'
+  wandb_run_name: 'Embeddim96'
+  eval_interval: 250 # keep frequent because we'll overfit
+  eval_iters: 200
+  log_interval: 10 # don't print too too often
+checkpointing:
+  always_save_checkpoint: False
+results:
+  out_dir: 'out-shakespeare-char'
+backend:
+  device: 'cuda'
+  dtype: 'float16'
+  compile: False
